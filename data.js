@@ -45,9 +45,15 @@
     katazuke: "借りた物につけた物は、終わったら取りはずし、借りた人のせいの傷は元にもどします（第599条）。損害の請求は返してから1年以内です（第600条）。",
   };
 
+  // part:ri:begin（shared-workflows の template/parts/data/ri.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   const ri = (R, a, b) => a + Math.floor(R() * (b - a + 1));
+  // part:ri:end
+  // part:shuffle:begin（shared-workflows の template/parts/data/shuffle.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function shuffle(R, a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = ri(R, 0, i); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+  // part:shuffle:end
+  // part:pickN:begin（shared-workflows の template/parts/data/pickN.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function pickN(R, a, n) { return shuffle(R, a).slice(0, n); }
+  // part:pickN:end
   const MEDIA = { ageru: "あげる", kariru: "借りる", kaesu: "返す", tadagari: "ただで借りる", katazuke: "片付け" };
   const WHO = ["Aさん", "Bさん", "Cさん", "Dさん"];
   const nOpt = (lv) => (lv === 0 ? 3 : 4);
@@ -188,8 +194,12 @@
       return { q: `${WHO[w]}が「家で使うだけ」と約束してただで貸した${THING[x]}は、仕事で荒く使われ、こわれて返ってきた。返してもらったのは${ago(m)}前。損害を求められる？`, opts: o, ans, v: `${k}.${x}.${w}:${o.join(".")}`, a: {} }; });
   const BY = Object.fromEntries(KINDS.map((k) => [k.id, k]));
   const kindsOf = (lv) => KINDS.filter((k) => k.lv === lv).map((k) => k.id);
+  // part:seedOf:begin（shared-workflows の template/parts/data/seedOf.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function seedOf(str) { let h = 2166136261; for (const ch of String(str)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  // part:seedOf:end
+  // part:rng:begin（shared-workflows の template/parts/data/rng.js の写し。ここでは直さない。node scripts/sync-template.mjs で写す）
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  // part:rng:end
   function make(tag) {
     const [kind] = String(tag).split("|"), k = Object.prototype.hasOwnProperty.call(BY, kind) ? BY[kind] : null;
     if (!k) return null;
